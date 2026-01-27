@@ -73,7 +73,7 @@ console.log(sortedPosts);
 
 ### Challenge 2: The Search Result Ranker
 
-**Scenario:** You have a list of products and a user search query. You need to rank results based on relevance relevance, not just alphabetical order.
+**Scenario:** You have a list of products and a user search query. You need to rank results based on relevance, not just alphabetical order.
 
 **Input:** An array of `Product` objects and a `searchQuery` string.
 
@@ -173,22 +173,6 @@ interface SensorReading {
 ## Solution
 
 ```ts
-// ### Challenge 3: The "Latest Reading" Filter
-
-// **Scenario:** You are receiving a stream of data from IoT sensors. Sensors send data multiple times a minute, but we only want the *latest* single reading for every unique Sensor ID.
-
-// **Input:** An array of `SensorReading` objects (unsorted).
-
-// ```typescript
-// interface SensorReading {
-//   sensorId: string;
-//   temperature: number;
-//   timestamp: number; // Unix epoch
-// }
-
-// ```
-
-// **Goal:** Return an array containing only the **most recent** reading for each unique `sensorId`. The order of the output array does not matter.
 
 interface SensorReading {
   sensorId: string;
