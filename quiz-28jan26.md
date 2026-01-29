@@ -64,7 +64,7 @@ Let’s unpack *why*, step by step, and compare it to the alternatives.
 
 ---
 
-## 1️⃣ What this approach is doing (conceptually)
+### 1️⃣ What this approach is doing (conceptually)
 
 This is called the **hash map / one-pass** solution.
 
@@ -85,9 +85,9 @@ So for each number:
 
 ---
 
-## 2️⃣ Why this is better than the brute-force approach
+### 2️⃣ Why this is better than the brute-force approach
 
-### ❌ Brute force (two loops)
+#### ❌ Brute force (two loops)
 
 ```js
 for (let i = 0; i < nums.length; i++) {
@@ -99,7 +99,7 @@ for (let i = 0; i < nums.length; i++) {
 }
 ```
 
-### Problems:
+#### Problems:
 
 * Time complexity: **O(n²)**
 * For 10,000 numbers → **50 million comparisons**
@@ -107,7 +107,7 @@ for (let i = 0; i < nums.length; i++) {
 
 ---
 
-### ✅ Your map approach
+#### ✅ Your map approach
 
 ```js
 for (let i = 0; i < nums.length; i++) {
@@ -123,7 +123,7 @@ for (let i = 0; i < nums.length; i++) {
 
 ---
 
-## 3️⃣ Why it handles duplicates correctly (like `0, 0`)
+### 3️⃣ Why it handles duplicates correctly (like `0, 0`)
 
 Example:
 
@@ -132,7 +132,7 @@ nums = [0, 4, 3, 0]
 target = 0
 ```
 
-### Walkthrough:
+#### Walkthrough:
 
 | i | nums[i] | needed | map before           | action        |
 | - | ------- | ------ | -------------------- | ------------- |
@@ -153,7 +153,7 @@ Returns:
 
 ---
 
-## 4️⃣ Why checking BEFORE storing matters
+### 4️⃣ Why checking BEFORE storing matters
 
 This line order is crucial:
 
@@ -165,7 +165,7 @@ if (map[needed] !== undefined) {
 map[nums[i]] = i;
 ```
 
-### Why?
+#### Why?
 
 Because it prevents using the **same element twice**.
 
@@ -180,7 +180,7 @@ Your order guarantees:
 
 ---
 
-## 5️⃣ Why an object / map beats `.indexOf()` or `.includes()`
+### 5️⃣ Why an object / map beats `.indexOf()` or `.includes()`
 
 Methods like:
 
@@ -200,7 +200,7 @@ A map gives you:
 
 ---
 
-## 6️⃣ One small improvement (important detail)
+### 6️⃣ One small improvement (important detail)
 
 This check:
 
@@ -210,7 +210,7 @@ if (map[needed] !== undefined)
 
 Can break if the stored index is `0`.
 
-### Safer version:
+#### Safer version:
 
 ```js
 if (needed in map) {
@@ -228,7 +228,7 @@ if (map.hasOwnProperty(needed)) {
 
 ---
 
-## 7️⃣ TL;DR — Why this approach wins 🏆
+### 7️⃣ TL;DR — Why this approach wins 🏆
 
 ✅ **O(n) time** — fastest possible
 ✅ Handles **duplicates** naturally
@@ -296,6 +296,110 @@ Output:
 
 **Follow-up:**
 Can you solve this in **O(n)** time?
+
+### Solution
+
+```js
+let nums = [4, 21, 3, 2, 1, 3];
+let nums2 = [5, 6, 7, 8];
+```
+
+### Highly Optimized - Using Set (simplest, tracks seen values)
+```js
+function findRepeatEleWithSet(nums) {
+    let seen = new Set(); // tracks numbers we’ve seen
+
+    for (let i = 0; i < nums.length; i++) {
+        if (seen.has(nums[i])) { // number repeats
+            return i; // return index of the repeat
+        }
+        seen.add(nums[i]); // mark as seen
+    }
+
+    return -1; // no repeats
+}
+```
+
+#### Notes:
+- Set only tracks existence, not index.
+- seen.has(value) is O(1), faster than scanning an array
+
+### Using Map (stores index, more flexible)
+```js
+function findRepeatEleWithMap(nums) {
+    let numMap = new Map(); // key = number, value = first index
+
+    for (let i = 0; i < nums.length; i++) {
+        if (numMap.has(nums[i])) { // number repeats
+            return i; // index of current repeat
+        }
+        numMap.set(nums[i], i); // store first occurrence index
+    }
+
+    return -1; // no repeats
+}
+
+```
+**Notes:**
+
+- Map lets you store extra info (like index, count, etc.).
+- numMap.has() is similar to in for objects but safer and works for any key type.
+
+```js
+// 2nd. Optimized Approach
+function findRepeatEle(nums){
+    let searchMap = {};
+    for (let i = 0; i < nums.length; i++){
+        // console.log(searchMap[nums[i]])
+        if(nums[i] in searchMap){
+            return searchMap[nums[i]];
+        }
+        searchMap[nums[i]] = i;
+        console.log(searchMap, searchMap[nums[i]])
+    }
+    return -1;
+}
+// brute force approach
+function findRepeatEle2(nums){
+    for (let i = 0; i < nums.length; i++){
+        for (let j = 0; j < nums.length; j++){
+            if(nums[i] === nums[j] && i !== j){
+                return nums[i]
+            }
+        }
+    }
+}
+console.log(findRepeatEle(nums))
+
+```
+
+#### Quick Comparisons
+| Goal                 | Use this                  |
+| -------------------- | ------------------------- |
+| Check key in object  | `key in obj`              |
+| Check own key only   | `obj.hasOwnProperty(key)` |
+| Check value in array | `arr.includes(value)`     |
+| Check index in array | `index in arr`            |
+| Fast lookup set      | `Object` or `Set` or `Map |
+
+
+| Data Type     | Works? | Time  | Notes                      |
+| ------------- | ------ | ----- | -------------------------- |
+| `{}`          | ✅      | O(n)  | Classic, fine              |
+| `Set`         | ✅      | O(n)  | ⭐ Best & cleanest          |
+| `Map`         | ✅      | O(n)  | More flexible              |
+| Array         | ⚠️     | O(n²) | Avoid                      |
+| Boolean array | ⚠️     | O(n)  | Only for constrained input |
+
+#### Key Difference
+
+| Feature     | Set                   | Map                                                    |
+| ----------- | --------------------- | ------------------------------------------------------ |
+| Stores      | Only existence        | Key → Value (can store anything)                       |
+| Lookup      | `.has()`              | `.has()`                                               |
+| Use case    | Just check duplicates | Check duplicates **and store info** (like first index) |
+| Performance | O(1)                  | O(1)                                                   |
+
 
 ---
 
