@@ -300,11 +300,11 @@ Can you solve this in **O(n)** time?
 ### Solution
 
 ```js
-let nums = [4, 21, 3, 2, 1, 3];
+let nums = [1, 2, 3, 2, 1, 3];
 let nums2 = [5, 6, 7, 8];
 ```
 
-### Highly Optimized - Using Set (simplest, tracks seen values)
+### Highly Optimized - Using Set (simplest, tracks seen values) - X Wrong Answer
 ```js
 function findRepeatEleWithSet(nums) {
     let seen = new Set(); // tracks numbers we’ve seen
@@ -324,7 +324,7 @@ function findRepeatEleWithSet(nums) {
 - Set only tracks existence, not index.
 - seen.has(value) is O(1), faster than scanning an array
 
-### Using Map (stores index, more flexible)
+### Using Map (stores index, more flexible) - X Wrong Answer
 ```js
 function findRepeatEleWithMap(nums) {
     let numMap = new Map(); // key = number, value = first index
@@ -346,7 +346,7 @@ function findRepeatEleWithMap(nums) {
 - numMap.has() is similar to in for objects but safer and works for any key type.
 
 ```js
-// 2nd. Optimized Approach
+// 2nd. Optimized Approach - Correct Answer
 function findRepeatEle(nums){
     let searchMap = {};
     for (let i = 0; i < nums.length; i++){
@@ -355,7 +355,6 @@ function findRepeatEle(nums){
             return searchMap[nums[i]];
         }
         searchMap[nums[i]] = i;
-        console.log(searchMap, searchMap[nums[i]])
     }
     return -1;
 }
@@ -460,6 +459,42 @@ false
 
 **Follow-up:**
 Can you do this in **O(n)** time?
+
+#### Solution
+
+```js
+function twoNumWithGivenDiff(nums, k){
+    let diffMap = {};
+    for (let i = 0; i < nums.length; i++){
+        console.log(diffMap)
+        if(nums[i] in diffMap){
+            return true
+        }
+
+        diffMap[i] =  k + nums[i];
+    }
+    
+    return false;
+}
+
+console.log(twoNumWithGivenDiff(nums2, k2))
+
+// or
+
+function twoNumWithGivenDiff(nums, k) {
+    let seen = new Set();
+
+    for (let num of nums) {
+        // Check if there's a number that satisfies num - other = k
+        if (seen.has(num - k) || seen.has(num + k)) {
+            return true;
+        }
+        seen.add(num);
+    }
+
+    return false;
+}
+```
 
 ---
 

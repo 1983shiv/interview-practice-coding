@@ -1,20 +1,37 @@
-let nums1 = [1, 2, 3, 2, 1];
-let nums2 = [5, 6, 7, 8];
-let searchMap = {}
+let nums1 = [5, 10, 3, 2, 50];
+let nums2 = [1, 2, 3, 4];
+// let nums3 = [1, 2, 3, 6, 8, 4, 2, 1];
 
-// brute force approach, but it takes O(n^2)
-function findRepeatEle(nums){
+let k1 = 8;
+let k2 = 10;
+
+// Optimized opproach
+function FindRepeatElements(nums){
+    let seen = {};
+
     for (let i = 0; i < nums.length; i++){
-        for (let j = 0; j < nums.length; j++){
-            if(nums[i] === nums[j] && i !== j){
-                return [i,j]
-            }
+        if((nums[i]) in seen ){
+            return seen[nums[i]];
         }
+        seen[nums[i]] = i;
     }
+
     return -1;
 }
 
+function twoNumWithGivenDiff(nums, k){
+    let diffMap = {};
+    for (let i = 0; i < nums.length; i++){
+        console.log(diffMap)
+        if(nums[i] in diffMap){
+            return true
+        }
+        
+        diffMap[i] =  k + nums[i];
+    }
+    
+    return false;
+}
 
-
-console.log(findRepeatEle(nums2))
+console.log(twoNumWithGivenDiff(nums2, k2))
 
